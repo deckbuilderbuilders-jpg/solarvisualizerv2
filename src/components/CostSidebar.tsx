@@ -78,7 +78,7 @@ const CostSidebar = ({ currentStep }: CostSidebarProps) => {
 
   const taxCredit = fullCost * 0.4;
   const totalRevenue = REVENUE.reduce((s, r) => s + r.amount, 0);
-  const showEconomics = currentStep >= 5;
+  const showEconomics = currentStep < 5;
 
   return (
     <div className="flex flex-col h-full">
@@ -152,6 +152,21 @@ const CostSidebar = ({ currentStep }: CostSidebarProps) => {
         })}
       </div>
 
+      {/* Explanatory text at step 5 */}
+      {currentStep === 5 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-4 pt-4 border-t border-border"
+        >
+          <h3 className="text-xs font-bold text-primary uppercase mb-2 tracking-widest">About Your System</h3>
+          <p className="text-[10px] text-muted-foreground leading-relaxed">
+            Your complete solar system installation is now ready. The financial summary below shows your total investment and the immediate returns from government incentives and tax credits. This investment generates ongoing savings year after year.
+          </p>
+        </motion.div>
+      )}
+
       {/* Total */}
       <div className="mt-3 pt-3 border-t border-border">
         <div className="flex justify-between items-center">
@@ -167,7 +182,7 @@ const CostSidebar = ({ currentStep }: CostSidebarProps) => {
         </div>
       </div>
 
-      {/* Economics section — appears after all steps */}
+      {/* Economics section — appears for steps 1-4 */}
       <AnimatePresence>
         {showEconomics && (
           <motion.div
