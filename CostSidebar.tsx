@@ -182,7 +182,7 @@ const CostSidebar = ({ currentStep }: CostSidebarProps) => {
         </div>
       </div>
 
-      {/* Economics section — appears after all steps */}
+      {/* Economics section — appears for steps 1-4 */}
       <AnimatePresence>
         {showEconomics && (
           <motion.div

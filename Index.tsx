@@ -69,33 +69,26 @@ const Index = () => {
             {showTutorial && <TutorialOverlay onStart={handleStart} />}
           </AnimatePresence>
 
-          {currentStep === 5 ? (
-            // Step 5: Economics box centered below scene
-            <>
-              <div className="flex-1 flex items-center justify-center p-4">
-                <SolarScene currentStep={currentStep} />
-              </div>
+          {/* Scene */}
+          <div className="flex-1 flex items-center justify-center p-4">
+            <SolarScene currentStep={currentStep} />
+          </div>
 
-              {/* Economics box - centered underneath */}
-              <div className="w-full flex justify-center px-4 pb-6">
-                <div className="w-full max-w-2xl">
-                  <EconomicsBox
-                    totalRevenue={totalRevenue}
-                    taxCredit={taxCredit}
-                    fullCost={fullCost}
-                  />
-                </div>
+          {/* Economics box - centered below scene only at step 5 */}
+          {currentStep === 5 && (
+            <div className="w-full flex justify-center px-4 pb-6">
+              <div className="w-full max-w-2xl">
+                <EconomicsBox
+                  totalRevenue={totalRevenue}
+                  taxCredit={taxCredit}
+                  fullCost={fullCost}
+                />
               </div>
-            </>
-          ) : (
-            // Steps 1-4: Normal layout
-            <div className="flex-1 flex items-center justify-center p-4">
-              <SolarScene currentStep={currentStep} />
             </div>
           )}
 
-          {/* Step title + navigation */}
-          {currentStep > 0 && (
+          {/* Step title + navigation - only shown for steps 1-4 */}
+          {currentStep > 0 && currentStep < 5 && (
             <div className="px-6 pb-5">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -141,9 +134,47 @@ const Index = () => {
           )}
         </div>
 
-        {/* Cost sidebar */}
+        {/* Sidebar - changes content based on step */}
         <aside className="w-full lg:w-80 xl:w-96 border-t lg:border-t-0 lg:border-l border-border bg-card/50 backdrop-blur-sm p-5">
-          <CostSidebar currentStep={currentStep} />
+          {currentStep === 5 ? (
+            // Step 5: Show step title, description, and navigation in sidebar
+            <div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-4"
+                >
+                  <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
+                    Step {currentStep} of 5
+                  </span>
+                  <h2 className="text-lg font-bold text-foreground tracking-tight">{activeStep?.title}</h2>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{activeStep?.description}</p>
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={prev}
+                  disabled={currentStep <= 1}
+                  className="flex items-center gap-1 px-4 py-2 rounded-md border border-border text-xs font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                >
+                  <ArrowLeft size={14} /> Back
+                </button>
+                <button
+                  onClick={reset}
+                  className="flex items-center gap-1 px-5 py-2 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity"
+                >
+                  <RotateCcw size={14} /> Start Over
+                </button>
+              </div>
+            </div>
+          ) : (
+            // Steps 1-4: Show CostSidebar
+            <CostSidebar currentStep={currentStep} />
+          )}
         </aside>
       </div>
     </div>
